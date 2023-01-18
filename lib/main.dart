@@ -232,8 +232,21 @@ class CalculatorState extends State<Calculator> {
               ],
             ),
           ),
+        AboutWidget()
         
-        Container(
+      ],
+    );
+  }
+}
+
+
+class AboutWidget extends StatelessWidget {
+  const AboutWidget({super.key});
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               alignment: Alignment.center,
               decoration: BoxDecoration(
@@ -252,7 +265,7 @@ class CalculatorState extends State<Calculator> {
                     ),
                   ),
                   Text(
-                    '301252385',
+                    'ID: 301252385',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 36,
@@ -261,8 +274,6 @@ class CalculatorState extends State<Calculator> {
                   SizedBox(height:5),
                 ],
               ))
-        
-      ],
-    );
+        ;
   }
 }
