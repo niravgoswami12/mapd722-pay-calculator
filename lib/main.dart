@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
@@ -9,38 +8,34 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const appTitle = 'Form Validation Demo';
+    const appTitle = 'Pay Calculator';
 
     return MaterialApp(
+      theme: ThemeData(
+          primarySwatch: Colors.teal
+      ),
       title: appTitle,
       home: Scaffold(
         appBar: AppBar(
           title: const Text(appTitle),
         ),
-        body: const MyCustomForm(),
+        body: const Calculator(),
       ),
     );
   }
 }
 
-// Create a Form widget.
-class MyCustomForm extends StatefulWidget {
-  const MyCustomForm({super.key});
+class Calculator extends StatefulWidget {
+  const Calculator({super.key});
 
   @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
+  CalculatorState createState() {
+    return CalculatorState();
   }
 }
 
-// Create a corresponding State class.
-// This class holds data related to the form.
-class MyCustomFormState extends State<MyCustomForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MyCustomFormState>.
+class CalculatorState extends State<Calculator> {
+
   final _formKey = GlobalKey<FormState>();
   double numberOfHours = 0;
   double hoursRate = 0;
@@ -49,7 +44,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   double totalPay = 0;
   double tax = 0;
 
-   calculateRegularPay() {
+  calculateRegularPay() {
     if (numberOfHours <= 40) {
       regularPay = numberOfHours * hoursRate;
       overtimePay = 0;
@@ -62,176 +57,193 @@ class MyCustomFormState extends State<MyCustomForm> {
 
     // Tax based on total pay
     tax = totalPay * 0.18;
-    setState((){});
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter a number of hour',
-                ),
-                // The validator receives the text that the user has entered.
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter number of hours';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  numberOfHours = double.parse(value!);
-                },
-              )),
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter a hourly rate',
-                ),
-                // The validator receives the text that the user has entered.
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter number of hours';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  hoursRate = double.parse(value!);
-                },
-              )),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false otherwise.
-                if (_formKey.currentState!.validate()) {
-                  // If the form is valid, display a snackbar. In the real world,
-                  // you'd often call a server or save the information in a database.
-                  _formKey.currentState?.save();
-                  calculateRegularPay();
+    return Column(
+      children: [
+        Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Enter a number of hour',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter number of hours';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        numberOfHours = double.parse(value!);
+                      },
+                    )),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Enter a hourly rate',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter number of hours';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        hoursRate = double.parse(value!);
+                      },
+                    )),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
                   
-                }
-              },
-              child: const Text('Calculate'),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Validate returns true if the form is valid, or false otherwise.
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState?.save();
+                        calculateRegularPay();
+                      }
+                    },
+                    child: const Text('Calculate'),
+                  ),
+                ),
+              ],
             ),
           ),
-          Container(
-          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              color: Colors.teal,
-              alignment: Alignment.center,
+        
+        Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: Colors.teal,
+                borderRadius: BorderRadius.circular(20)
+              ),
             child: Row(
               children: [
                 Expanded(
                   child: Column(
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      const SizedBox(height:5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                        children: const [
                           Text(
-                            'Reports',
+                            'Report',
                             style: TextStyle(
-                              color: Colors.grey[500],
-                              fontSize: 36,
-                            ),
+                                color: Colors.white,
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold),
                           )
                         ],
                       ),
+                      const SizedBox(height: 20),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
+                          const SizedBox(width: 20),
+                          const Text(
                             'Regular Pay',
                             style: TextStyle(
-                              color: Colors.grey[500],
-                            ),
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
                           ),
+                          const SizedBox(width: 20),
                           Text(
-                          '$regularPay',
-                            style: TextStyle(
-                              color: Colors.grey[500],
-                            ),
+                            '$regularPay',
+                            style: const TextStyle(color: Colors.white, fontSize: 24),
                           ),
                         ],
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          const SizedBox(width: 20),
                           Text(
                             'Overtime Pay',
                             style: TextStyle(
-                              color: Colors.grey[500],
-                            ),
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
                           ),
+                          const SizedBox(width: 20),
                           Text(
                             '$overtimePay',
-                            style: TextStyle(
-                              color: Colors.grey[500],
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 24),
                           ),
                         ],
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          const SizedBox(width: 20),
                           Text(
                             'Total pay',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                              
-                              color: Colors.grey[500],
-                            ),
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
                           ),
+                          const SizedBox(width: 20),
                           Text(
                             '$totalPay',
                             style: TextStyle(
-                              color: Colors.grey[500],
+                              color: Colors.white,
+                              fontSize: 24,
                             ),
                           ),
                         ],
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          const SizedBox(width: 20),
                           Text(
                             'Tax',
                             style: TextStyle(
-                              color: Colors.grey[500],
-                            ),
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
                           ),
+                          const SizedBox(width: 20),
                           Text(
                             '$tax',
-                            style: TextStyle(
-                              color: Colors.grey[500],
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 24),
                           ),
                         ],
-                      )
+                      ),
+                      const SizedBox(height: 5),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          
-          Container(
+        
+        Container(
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              color: Colors.teal,
               alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.indigo,
+                borderRadius: BorderRadius.circular(20)
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: const [
+                  SizedBox(height:5),
                   Text(
                     'Nirav Goswami',
                     style: TextStyle(
@@ -246,10 +258,11 @@ class MyCustomFormState extends State<MyCustomForm> {
                       fontSize: 36,
                     ),
                   ),
+                  SizedBox(height:5),
                 ],
               ))
-        ],
-      ),
+        
+      ],
     );
   }
 }
