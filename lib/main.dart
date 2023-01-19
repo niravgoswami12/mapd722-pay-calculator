@@ -80,6 +80,10 @@ class CalculatorState extends State<Calculator> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter number of hours';
                         }
+                        RegExp regex = RegExp(r'^(?=\D*(?:\d\D*){1,12}$)\d+(?:\.\d{1,4})?$');
+                        if (!regex.hasMatch(value)) {
+                            return 'Enter Valid Number';
+                        } 
                         return null;
                       },
                       onSaved: (value) {
@@ -95,8 +99,12 @@ class CalculatorState extends State<Calculator> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter number of hours';
+                          return 'Please enter hourly rate';
                         }
+                        RegExp regex = RegExp(r'^(?=\D*(?:\d\D*){1,12}$)\d+(?:\.\d{1,4})?$');
+                        if (!regex.hasMatch(value)) {
+                            return 'Enter Valid Number';
+                        } 
                         return null;
                       },
                       onSaved: (value) {
